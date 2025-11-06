@@ -1,0 +1,484 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fce4ec;
+    /* A soft pink background */
+    font-family: 'Brush Script MT', 'Brush Script Std', cursive;
+    overflow: hidden;
+    /* Hide hearts that go off-screen */
+}
+
+.container {
+    text-align: center;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 6rem;
+    color: #c2185b;
+    /* A deep pink color for the text */
+    animation: fadeInText 2.5s ease-in-out forwards;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInText {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Heart styles */
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    transform: rotate(-45deg);
+    animation: fall 7s linear infinite;
+}
+
+.heart::before,
+.heart::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #e91e63;
+    /* Heart color */
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -10px;
+    left: 0;
+}
+
+.heart::after {
+    top: 0;
+    left: 10px;
+}
+
+@keyframes fall {
+    0% {
+        top: -10%;
+        opacity: 1;
+    }
+    100% {
+        top: 110%;
+        opacity: 0;
+    }
+}
+
+.next-page-btn {
+    display: inline-block;
+    margin-top: 25px;
+    font-size: 3.5rem;
+    color: #c2185b;
+    text-decoration: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    /* Start as invisible */
+    /* Combine fadeInButton for initial appearance and beat for continuous animation */
+    /* The beat animation starts after fadeInButton finishes (2.5s delay + 1.5s duration = 4s) */
+    animation: fadeInButton 1.5s ease-in-out 2.5s forwards, beat 1.5s infinite ease-in-out 4s forwards;
+    /* Removed transition: transform to avoid conflict with animation */
+}
+
+.next-page-btn:hover {
+    transform: scale(1.2);
+    /* Grow on hover */
+    animation-play-state: paused;
+    /* Pause the beating animation on hover */
+}
+
+@keyframes fadeInButton {
+    /* Existing fadeInButton animation */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* New animation for click effect */
+
+
+/* New animation for click effect */
+
+@keyframes heartClickPop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.6);
+        /* Make it pop significantly */
+    }
+    100% {
+        transform: scale(1.2);
+        /* Settle slightly larger before navigation */
+    }
+}
+
+
+/* Apply the animation when the button is clicked */
+
+.next-page-btn.clicked {
+    animation: heartClickPop 0.4s ease-out forwards;
+    /* Play once and stay at end state */
+}
+
+
+/* Styles for next-page.html */
+
+
+/* Styles for next-page.html */
+
+.content-container {
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeInContent 1.5s ease-in-out forwards;
+}
+
+
+/* Allow scrolling on pages with lots of content */
+
+body:has(.content-container) {
+    display: block;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+.content-box {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto 30px;
+    /* Add margin to bottom */
+}
+
+.content-box h2 {
+    font-size: 3rem;
+    color: #c2185b;
+    margin-bottom: 20px;
+}
+
+.content-box p {
+    font-family: 'Georgia', serif;
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* The beat animation for heart buttons */
+
+@keyframes beat {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+        /* Slightly larger at the peak of the beat */
+    }
+}
+
+
+/* Styles for gallery.html */
+
+.gallery-title {
+    font-size: 3.5rem;
+    color: #c2185b;
+    margin-bottom: 20px;
+}
+
+.gallery-slider {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto 30px;
+    overflow: hidden;
+    border-radius: 15px;
+    perspective: 1000px;
+    /* Add perspective for 3D animations */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+body:has(.gallery-slider) {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.gallery-wrapper {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.photo-item {
+    min-width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    /* Add some padding around the frame */
+    text-align: center;
+    /* Center the frame within the item */
+}
+
+.vintage-frame {
+    background-color: #ffffff;
+    /* A creamy, old-paper color */
+    border: 15px solid #ffffff;
+    /* A light wood-like border */
+    border-bottom-width: 50px;
+    /* Thicker bottom for the caption */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    position: relative;
+    display: inline-block;
+    width: 400px;
+    /* Set a fixed width for the frame */
+    height: 400px;
+    /* Set a fixed height for the frame */
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    /* Smooth transition for hover */
+}
+
+.vintage-frame:hover {
+    transform: rotate(2deg) scale(1.05);
+    /* Tilt and grow on hover */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.photo-caption {
+    position: absolute;
+    bottom: -40px;
+    /* Position it in the thicker bottom border */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Brush Script MT', 'Brush Script Std', cursive;
+    font-size: 1.4rem;
+    color: #5d4037;
+    /* A dark brown color */
+    font-style: italic;
+    line-height: 1;
+    user-select: none;
+    /* Prepare for animation */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpCaption 0.5s ease-out 0.5s forwards;
+    /* Delay start */
+}
+
+.photo-date {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white */
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #5d4037;
+    /* Dark brown */
+    font-style: normal;
+    /* Reset italic from caption */
+    font-family: Arial, sans-serif;
+    /* A more readable font */
+    opacity: 0;
+    /* Hidden by default */
+    animation: fadeInDate 0.5s ease-out 0.8s forwards;
+    /* Fade-in animation */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+@keyframes fadeInDate {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUpCaption {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* This makes the image cover the area without stretching */
+    display: block;
+}
+
+.gallery-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(213, 189, 197, 0.5);
+    /* Soft pink with transparency */
+    color: #5d4037;
+    /* Dark brown, same as caption */
+    border: none;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    /* Make it fully rounded */
+    user-select: none;
+    transition: background-color 0.3s ease;
+    width: 40px;
+    /* adjust as needed */
+    height: 40px;
+    /* adjust as needed */
+    line-height: 42px;
+    /* Fine-tune vertical alignment */
+    /* Vertically center the heart */
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Add a subtle shadow */
+}
+
+.gallery-btn:hover {
+    background-color: rgba(252, 228, 236, 0.9);
+    /* Darken on hover */
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+@keyframes slideInEffect {
+    0% {
+        opacity: 0;
+        transform: rotateY(-30deg) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: rotateY(0) scale(1);
+    }
+}
+
+
+/* --- Mobile Responsiveness --- */
+
+@media (max-width: 768px) {
+    /* Index Page */
+    h1 {
+        font-size: 4rem;
+    }
+    .next-page-btn {
+        font-size: 3rem;
+    }
+    /* Content Pages (special-message, next-page, etc.) */
+    .content-box {
+        padding: 20px;
+        margin: 0 15px;
+    }
+    .content-box h2 {
+        font-size: 2.5rem;
+    }
+    .content-box p {
+        font-size: 1.1rem;
+    }
+    /* Gallery Page */
+    .gallery-title {
+        font-size: 2.8rem;
+    }
+    .gallery-slider {
+        width: 100%;
+        /* Use 100% instead of 100vw */
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0 auto;
+        /* Ensure it's centered */
+    }
+    .photo-item {
+        padding: 10px;
+        display: flex;
+        /* Use flexbox for centering */
+        justify-content: center;
+        /* Center horizontally */
+        align-items: center;
+        /* Center vertically */
+    }
+    .vintage-frame {
+        /* Make frame responsive, adjust size based on viewport width */
+        width: 90vw;
+        /* Set width relative to viewport */
+        height: 90vw;
+        /* Maintain a square aspect ratio */
+        border-width: 10px;
+        border-bottom-width: 40px;
+    }
+    .photo-caption {
+        font-size: 1.2rem;
+        bottom: -35px;
+    }
+    .gallery-btn {
+        width: 35px;
+        height: 35px;
+        line-height: 37px;
+        font-size: 1.5rem;
+    }
+    .prev-btn {
+        left: 5px;
+    }
+    .next-btn {
+        right: 5px;
+    }
+    body:has(.content-container) {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    body:has(.gallery-slider) {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
