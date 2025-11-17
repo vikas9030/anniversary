@@ -4,95 +4,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Photo Gallery</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Vintage Love Letter Carousel Gallery</title>
+    <!-- Load Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Font Imports (Using Inter for readability in descriptions/buttons) --- */
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        /* Base Configuration & Fonts */
+        
+         :root {
+            --primary-accent: #e91e63;
+            /* Deep Pink/Magenta for action */
+            --default-bg-color: #fce4ec;
+            /* Soft pink background */
+            --default-text-color: #5d4037;
+            /* Dark brown for readability */
+            --default-overlay-color: rgba(255, 255, 255, 0.95);
+            /* Semi-transparent soft white overlay */
+            --hover-overlay-color: rgba(233, 30, 99, 0.9);
+            /* Deep pink accent on hover */
+            --transition-speed: 0.5s;
+        }
+        
+        body {
+            /* Fallback font: Georgia for vintage cursive feel, Inter for clean look */
+            font-family: 'Georgia', serif, 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--default-bg-color);
+            margin: 0;
+            overflow-x: hidden;
+            /* Crucial for mobile to prevent horizontal scrolling */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .main-title {
+            /* Fallback to system cursive for vintage style */
+            font-family: 'Brush Script MT', 'Brush Script Std', cursive, sans-serif;
+            font-size: 3rem;
+            color: #c2185b;
+            margin-bottom: 24px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            line-height: 1.2;
+        }
+        /* --- LAYOUT CONTAINER (Simplified for centered wrapper) --- */
+        
+        .gallery-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        /* --- CAROUSEL WRAPPER (The visible viewport) --- */
+        
+        .carousel-wrapper {
+            position: relative;
+            width: 90vw;
+            max-width: 400px;
+            height: 480px;
+            /* Default height for desktop/tablet */
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(220, 150, 180, 0.5), 0 0 15px rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            /* Indicate double tap area visually */
+            cursor: pointer;
+        }
+        /* --- CAROUSEL TRACK (Holds all slides horizontally) --- */
+        
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* --- GALLERY CONTAINER (Individual Slide) --- */
+        
+        .gallery-container {
+            width: 100%;
+            height: 100%;
+            /* Use 100% of wrapper height */
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow var(--transition-speed);
+        }
+        /* --- Image Styling --- */
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #ffe0f0;
+            /* Soft pink fallback color */
+            display: block;
+            transition: transform var(--transition-speed) ease-in-out;
+        }
+        /* --- Content Overlay Styling --- */
+        
+        .gallery-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            color: var(--default-text-color);
+            background-color: var(--default-overlay-color);
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform var(--transition-speed) ease-out, background-color var(--transition-speed);
+            transform-style: preserve-3d;
+        }
+        
+        .gallery-container:hover .gallery-content {
+            transform: translateY(0);
+            background-color: var(--hover-overlay-color);
+            color: white;
+        }
+        
+        .gallery-container:hover .gallery-image {
+            transform: scale(1.05);
+        }
+        
+        .content-title {
+            font-family: 'Brush Script MT', cursive;
+            margin: 0 0 8px 0;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #c2185b;
+            transition: color var(--transition-speed);
+        }
+        
+        .gallery-container:hover .content-title {
+            color: white;
+        }
+        
+        .content-description {
+            font-family: 'Inter', sans-serif;
+            /* Ensure description is highly readable */
+            margin: 0 0 15px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .content-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            border: none;
+            /* Ensure button looks clean */
+            cursor: pointer;
+        }
+        
+        .content-button:hover {
+            background-color: #c2185b;
+            transform: scale(1.05);
+        }
+        /* --- MOBILE RESPONSIVENESS (<= 600px) --- */
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .main-title {
+                font-size: 2.2rem;
+                margin-bottom: 20px;
+                padding: 0 10px;
+            }
+            .carousel-wrapper {
+                height: 400px;
+            }
+            .content-title {
+                font-size: 1.6rem;
+            }
+            .content-description {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="content-container">
-        <h2 class="gallery-title">Our Moments</h2>
-        <div class="gallery-slider">
-            <div class="gallery-wrapper">
-                <div class="photo-item" data-date="2024-07-15">
-                    <div class="vintage-frame">
-                        <img src="assets/images/1.jpg" alt="Memory 1">
-                        <div class="photo-caption">My Favourite picture with you</div>
-                        <div class="photo-date">27/06/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-08-01">
-                    <div class="vintage-frame">
-                        <img src="assets/images/0.jpg" alt="Memory 2">
-                        <div class="photo-caption">Our First Outing & Bike ride with you.</div>
-                        <div class="photo-date">04/07/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-08-10">
-                    <div class="vintage-frame">
-                        <img src="assets/images/2.jpg" alt="Memory 3">
-                        <div class="photo-caption">The day i played with your hair.</div>
-                        <div class="photo-date">08/07/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-09-01">
-                    <div class="vintage-frame">
-                        <img src="assets/images/3.jpg" alt="Memory 4">
-                        <div class="photo-caption">When i close my eyes i'm always remembering that day.</div>
-                        <div class="photo-date">15/07/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-09-15">
-                    <div class="vintage-frame">
-                        <img src="assets/images/4.jpg" alt="Memory 5">
-                        <div class="photo-caption">I'll try my level best to make your hands more beautiful.</div>
-                        <div class="photo-date">21/07/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-10-01">
-                    <div class="vintage-frame">
-                        <img src="assets/images/5.jpg" alt="Memory 6">
-                        <div class="photo-caption">After so many fights & problems.I just tell myself she's fine dont worry.</div>
-                        <div class="photo-date">08/09/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-10-15">
-                    <div class="vintage-frame">
-                        <img src="assets/images/6.jpg" alt="Memory 5">
-                        <div class="photo-caption">I'll still remember ur outfit on that day.</div>
-                        <div class="photo-date">09/09/2025</div>
+
+    <h1 class="main-title">A Collection of Our Sweetest Moments</h1>
+
+    <div class="gallery-layout">
+        <div class="carousel-wrapper" id="carouselWrapper">
+            <!-- Navigation buttons removed per user request. -->
+
+            <div class="carousel-track" id="carouselTrack">
+
+                <!-- Slides 1-10 remain the same structure for content -->
+                <div class="gallery-container" id="slide1">
+                    <img src="assets/images/0.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+1'" alt="Vintage photo of a couple" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Our First Outing</h3>
+                        <p class="content-description">Our First Outing & Bike ride with you.</p>
+                        <button class="content-button">See Details</button>
                     </div>
                 </div>
 
-                <div class="photo-item" data-date="2024-11-01">
-                    <div class="vintage-frame">
-                        <img src="assets/images/7.jpg" alt="Memory 6">
-                        <div class="photo-caption">I want to recreate this moment every time and every day.</div>
-                        <div class="photo-date">15/10/2025</div>
-                    </div>
-                </div>
-                <div class="photo-item" data-date="2024-11-17">
-                    <div class="vintage-frame">
-                        <img src="assets/images/8.jpg" alt="Memory 5">
-                        <div class="photo-caption">We promised each other to get married. The commitment was sealed on this day by putting the ring on her finger.</div>
-                        <div class="photo-date">09/09/2025</div>
+                <div class="gallery-container" id="slide2">
+                    <img src="assets/images/1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+2'" alt="Favourite picture" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">My Favourite</h3>
+                        <p class="content-description">My Favourite picture with you.</p>
+                        <button class="content-button">Read Story</button>
                     </div>
                 </div>
 
-                <div class="photo-item" data-date="2024-11-17">
-                    <div class="vintage-frame">
-                        <img src="assets/images/9.jpg" alt="Memory 6">
-                        <div class="photo-caption">After a month apart, we fell into each other's arms with a rush of pent-up love, longing, and all the ache of missing. The moment we reunited, our souls were instantly soothed, cooled, and filled with a pure, happy peace.</div>
-                        <div class="photo-date">15/10/2025</div>
+                <div class="gallery-container" id="slide3">
+                    <img src="assets/images/2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+3'" alt="Playing with hair" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Playful Moments</h3>
+                        <p class="content-description">The day I played with your hair.</p>
+                        <button class="content-button">Revisit</button>
                     </div>
                 </div>
+
+                <div class="gallery-container" id="slide4">
+                    <img src="assets/images/3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+4'" alt="A memorable day" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Unforgettable Day</h3>
+                        <p class="content-description">When I close my eyes I'm always remembering that day.</p>
+                        <button class="content-button">Remember</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide5">
+                    <img src="assets/images/4.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+5'" alt="Holding hands" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">A Promise</h3>
+                        <p class="content-description">I'll try my level best to make your hands more beautiful.</p>
+                        <button class="content-button">My Oath</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide6">
+                    <img src="assets/images/5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+6'" alt="A thoughtful moment" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Through Thick & Thin</h3>
+                        <p class="content-description">After so many fights & problems. I just tell myself she's fine dont worry.</p>
+                        <button class="content-button">Our Strength</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide7">
+                    <img src="assets/images/6.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+7'" alt="Remembering an outfit" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">That Outfit</h3>
+                        <p class="content-description">I'll still remember your outfit on that day.</p>
+                        <button class="content-button">Fashion File</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide8">
+                    <img src="assets/images/7.jpg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+8'" alt="A moment to recreate" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Forever Moment</h3>
+                        <p class="content-description">I want to recreate this moment every time and every day.</p>
+                        <button class="content-button">Recreate</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide9">
+                    <img src="assets/images/8.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+9'" alt="Engagement ring" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">The Commitment</h3>
+                        <p class="content-description">We promised each other to get married. The commitment was sealed on this day.</p>
+                        <button class="content-button">The Ring</button>
+                    </div>
+                </div>
+
+                <div class="gallery-container" id="slide10">
+                    <img src="assets/images/9.jpeg" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/fce4ec/c2185b?text=Image+10'" alt="A reunion hug" class="gallery-image">
+                    <div class="gallery-content">
+                        <h3 class="content-title">Reunited</h3>
+                        <p class="content-description">A month of missing vanished in a single hug. We were finally back together.</p>
+                        <button class="content-button">The Hug</button>
+                    </div>
+                </div>
+
             </div>
-            <button class="gallery-btn prev-btn">&#x276E;</button>
-            <button class="gallery-btn next-btn">&#x276F;</button>
-        </div>
-        <a href="index.html" class="heart-back-btn" title="Go Back">&hearts;</a>
-    </div>
-    <script src="script.js"></script>
-</body>
 
+        </div>
+    </div>
+
+    <!-- Heart button removed per user request. -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.getElementById('carouselWrapper');
+            const track = document.getElementById('carouselTrack');
+            const slides = Array.from(track.children);
+            const totalSlides = slides.length;
+
+            let slideWidth = 0;
+            let currentIndex = 0;
+            const maxRotation = 10;
+            const TRANSITION_DURATION = 600;
+
+            // --- Double Tap & Swipe State ---
+            let isTransitioning = false;
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let animationID = null;
+            let lastTapTime = 0; // For double tap detection
+
+            // Variables to hold current active slide and its bound handlers
+            let activeSlide = null;
+            let currentHandleTilt = null;
+            let currentResetTilt = null;
+
+            // --- 3D Tilt Logic Helper Functions (Applied only to the active slide) ---
+
+            const handleTilt = (target, e) => {
+                const rect = target.getBoundingClientRect();
+                // Normalize event coordinates for both mouse and touch
+                const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : null);
+                const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : null);
+
+                if (clientX === null || clientY === null) return;
+
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+
+                // Normalize coordinates from -0.5 to 0.5 (0 being the center)
+                const xRatio = (x / rect.width) - 0.5;
+                const yRatio = (y / rect.height) - 0.5;
+
+                // Calculate rotation angles
+                const rotationY = xRatio * (maxRotation * 2);
+                const rotationX = -yRatio * (maxRotation * 2);
+
+                target.style.transform = `perspective(1000px) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            };
+
+            const resetTilt = (target) => {
+                target.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            };
+
+            const updateTiltHandlers = () => {
+                // 1. Clean up old handlers
+                if (activeSlide && currentHandleTilt && currentResetTilt) {
+                    activeSlide.removeEventListener('mousemove', currentHandleTilt);
+                    activeSlide.removeEventListener('mouseleave', currentResetTilt);
+                    activeSlide.removeEventListener('touchmove', currentHandleTilt);
+                    activeSlide.removeEventListener('touchend', currentResetTilt);
+                    resetTilt(activeSlide);
+                }
+
+                // 2. Set new active slide
+                activeSlide = slides[currentIndex];
+
+                // 3. Create bound handlers for the new active slide instance
+                currentHandleTilt = (e) => handleTilt(activeSlide, e);
+                currentResetTilt = () => resetTilt(activeSlide);
+
+                // 4. Attach new handlers (supporting both mouse and touch)
+                activeSlide.addEventListener('mousemove', currentHandleTilt);
+                activeSlide.addEventListener('mouseleave', currentResetTilt);
+                // Touch events are essential for mobile 3D effect
+                activeSlide.addEventListener('touchmove', currentHandleTilt);
+                activeSlide.addEventListener('touchend', currentResetTilt);
+            };
+
+            // --- Slide Navigation Logic ---
+
+            const setPositionByIndex = (shouldAnimate = true, customTranslate = null) => {
+                const xPos = -currentIndex * slideWidth;
+
+                if (shouldAnimate) {
+                    track.style.transition = `transform ${TRANSITION_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                    track.style.transform = `translateX(${xPos}px)`;
+
+                    // START TRANSITION: Block input if animating
+                    isTransitioning = true;
+
+                    // Unlock the transition state after the duration
+                    setTimeout(() => {
+                        isTransitioning = false;
+                        updateTiltHandlers(); // Re-attach tilt handlers only when stable
+                    }, TRANSITION_DURATION);
+                } else {
+                    // For dragging, remove the transition and use custom Translate
+                    track.style.transition = 'none';
+                    track.style.transform = `translateX(${customTranslate}px)`;
+                }
+                prevTranslate = xPos;
+            };
+
+            const nextSlide = () => {
+                if (isTransitioning) return; // GLITCH PREVENTION: Block input if animating
+
+                // Advance and loop to the first slide
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateSlide();
+            };
+
+            const prevSlide = () => {
+                if (isTransitioning) return; // GLITCH PREVENTION: Block input if animating
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateSlide();
+            };
+
+            const updateSlide = () => {
+                // Recalculate slideWidth on every update for responsiveness
+                slideWidth = slides.length > 0 ? slides[0].offsetWidth : wrapper.offsetWidth;
+                setPositionByIndex();
+            };
+
+            // --- Touch/Swipe & Double Tap Logic ---
+
+            const getPositionX = e => e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+
+            const startDrag = (e) => {
+                if (isTransitioning) return;
+
+                // Prevent mouse dragging outside the track area from interacting
+                if (e.type === 'mousedown') {
+                    e.preventDefault();
+                }
+
+                isDragging = true;
+                startPos = getPositionX(e);
+                currentTranslate = prevTranslate;
+
+                // Remove CSS transition for immediate dragging response
+                track.style.transition = 'none';
+
+                cancelAnimationFrame(animationID);
+                animationID = requestAnimationFrame(animation);
+            };
+
+            const dragMove = (e) => {
+                if (!isDragging) return;
+
+                const currentPosition = getPositionX(e);
+                const deltaX = currentPosition - startPos;
+                currentTranslate = prevTranslate + deltaX;
+            };
+
+            const dragEnd = (e) => {
+                cancelAnimationFrame(animationID);
+
+                const movedBy = currentTranslate - prevTranslate;
+                const threshold = slideWidth / 4; // Move if dragged past 25% of slide width
+                const dragTolerance = 10; // Max pixels for a move to be considered a tap
+
+                // 1. Check for Double Tap (Only on touch devices)
+                if (e.type.includes('touch') && Math.abs(movedBy) < dragTolerance) {
+                    const currentTime = new Date().getTime();
+                    const tapLength = currentTime - lastTapTime;
+                    const DOUBLE_TAP_THRESHOLD = 300; // ms
+
+                    if (tapLength < DOUBLE_TAP_THRESHOLD && tapLength > 0) {
+                        // Double Tap detected -> Go to next slide
+                        nextSlide();
+                        lastTapTime = 0; // Reset last tap time to prevent accidental multi-taps
+                        isDragging = false; // Must be reset here too
+                        return; // Exit function to prevent snapping back (nextSlide already handles the animation)
+                    }
+                    lastTapTime = currentTime;
+                }
+
+                isDragging = false;
+
+                // 2. Check for Swipe Navigation
+                if (movedBy < -threshold) {
+                    // Swipe left to go next
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                } else if (movedBy > threshold) {
+                    // Swipe right to go previous
+                    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                }
+
+                // 3. Snap back to the correct slide position with animation
+                setPositionByIndex(true);
+            };
+
+            const animation = () => {
+                if (isDragging) {
+                    // Apply the translation without CSS transition during drag
+                    track.style.transform = `translateX(${currentTranslate}px)`;
+                    animationID = requestAnimationFrame(animation);
+                }
+            };
+
+            // --- Initialization & Event Binding ---
+
+            const initCarousel = () => {
+                // Ensure slide width is correctly calculated, especially on resize
+                slideWidth = slides.length > 0 ? slides[0].offsetWidth : wrapper.offsetWidth;
+                setPositionByIndex();
+                updateTiltHandlers(); // Initial handler setup
+            }
+
+            // Mouse Events for Swipe/Drag
+            wrapper.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+            wrapper.addEventListener('mouseleave', dragEnd); // End drag if mouse leaves wrapper
+
+            // Touch Events for Swipe/Drag (CRITICAL for mobile, includes the double-tap logic)
+            wrapper.addEventListener('touchstart', startDrag);
+            wrapper.addEventListener('touchmove', dragMove);
+            wrapper.addEventListener('touchend', dragEnd);
+
+            // Initial setup and resize listener for responsiveness
+            initCarousel();
+            window.addEventListener('resize', initCarousel);
+        });
+    </script>
+</body>
 
 </html>
