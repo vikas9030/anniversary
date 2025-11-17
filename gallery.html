@@ -58,6 +58,8 @@
         
         .gallery-layout {
             display: flex;
+            flex-direction: column;
+            /* Stack items vertically */
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -196,6 +198,41 @@
                 font-size: 0.85rem;
             }
         }
+        /* --- Back Button Heart (from style.css) --- */
+        
+        .heart-back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 4.5rem;
+            color: #c2185b;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: beat 1.5s infinite ease-in-out;
+            transition: transform 0.3s ease;
+        }
+        
+        .heart-back-btn:hover {
+            transform: scale(1.2);
+            animation-play-state: paused;
+        }
+        
+        @keyframes beat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+        /* --- End Back Button Heart --- */
+        /* Fix for nested gallery containers */
+        
+        #slide4>.gallery-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
@@ -215,7 +252,7 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Our First Outing</h3>
                         <p class="content-description">Our First Outing & Bike ride with you.</p>
-                        <button class="content-button">See Details</button>
+
                     </div>
                 </div>
 
@@ -224,7 +261,7 @@
                     <div class="gallery-content">
                         <h3 class="content-title">My Favourite</h3>
                         <p class="content-description">My Favourite picture with you.</p>
-                        <button class="content-button">Read Story</button>
+
                     </div>
                 </div>
 
@@ -233,7 +270,7 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Playful Moments</h3>
                         <p class="content-description">The day I played with your hair.</p>
-                        <button class="content-button">Revisit</button>
+
                     </div>
                 </div>
 
@@ -242,7 +279,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Unforgettable Day</h3>
                         <p class="content-description">When I close my eyes I'm always remembering that day.</p>
-                        <button class="content-button">Remember</button>
                     </div>
                 </div>
 
@@ -251,7 +287,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">A Promise</h3>
                         <p class="content-description">I'll try my level best to make your hands more beautiful.</p>
-                        <button class="content-button">My Oath</button>
                     </div>
                 </div>
 
@@ -260,7 +295,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Through Thick & Thin</h3>
                         <p class="content-description">After so many fights & problems. I just tell myself she's fine dont worry.</p>
-                        <button class="content-button">Our Strength</button>
                     </div>
                 </div>
 
@@ -269,7 +303,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">That Outfit</h3>
                         <p class="content-description">I'll still remember your outfit on that day.</p>
-                        <button class="content-button">Fashion File</button>
                     </div>
                 </div>
 
@@ -278,7 +311,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Forever Moment</h3>
                         <p class="content-description">I want to recreate this moment every time and every day.</p>
-                        <button class="content-button">Recreate</button>
                     </div>
                 </div>
 
@@ -287,7 +319,6 @@
                     <div class="gallery-content">
                         <h3 class="content-title">The Commitment</h3>
                         <p class="content-description">We promised each other to get married. The commitment was sealed on this day.</p>
-                        <button class="content-button">The Ring</button>
                     </div>
                 </div>
 
@@ -296,17 +327,14 @@
                     <div class="gallery-content">
                         <h3 class="content-title">Reunited</h3>
                         <p class="content-description">A month of missing vanished in a single hug. We were finally back together.</p>
-                        <button class="content-button">The Hug</button>
                     </div>
                 </div>
 
             </div>
-
         </div>
+        <a href="index.html" class="heart-back-btn" title="Go Back">&hearts;</a>
     </div>
-
-    <!-- Heart button removed per user request. -->
-
+    <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const wrapper = document.getElementById('carouselWrapper');
