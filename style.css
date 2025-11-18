@@ -83,7 +83,7 @@ h1 {
 .next-page-btn {
     display: inline-block;
     margin-top: 25px;
-    font-size: 3.5rem;
+     font-size: 7rem; /* Made the heart bigger! */
     color: #c2185b;
     text-decoration: none;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -481,4 +481,5 @@ body:has(.gallery-slider) {
         padding-top: 20px;
         padding-bottom: 20px;
     }
+
 }
